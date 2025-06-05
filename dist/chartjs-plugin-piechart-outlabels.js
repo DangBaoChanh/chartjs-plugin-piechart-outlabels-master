@@ -581,20 +581,19 @@ var classes = {
     };
 
     this.draw = function (ctx) {
-      if (chart.getDataVisibility(index) && !this.hidden) {
+      if (chart.getDataVisibility(index)) {
         this.drawLabel(ctx);
         this.drawText(ctx);
         this.drawLine(ctx);
       }
     };
 
-
     // eslint-disable-next-line max-statements
     this.update = function (view, elements, max) {
       this.center = positioners.center(view, this.stretch);
 
       let valid = false;
-      let steps = 5; // Tăng số lần thử đẩy label
+      let steps = 30;
 
       while (!valid && steps > 0) {
         this.textRect = this.computeTextRect();
@@ -615,42 +614,12 @@ var classes = {
         }
 
         if (!valid) {
-          // Thay vì chỉ ẩn, đẩy label đi thêm
-          this.offset.x += this.offsetStep;
-          this.center.x += this.offsetStep;
-          steps--;
-          continue;
+          this.center = positioners.moveFromAnchor(this.center, 5);
         }
 
         steps--;
       }
-
-      // Nếu không hợp lệ sau các bước thử, thay vì ẩn thì remove khỏi elements luôn
-      if (!valid) {
-        // Xoá hẳn label khỏi mảng elements
-        elements.splice(index, 1);
-
-        // Giảm tổng max để không lặp thừa
-        max--;
-
-        // Dừng lại vì label đã bị xoá
-        return;
-      }
-      for (let i = 0; i < elements.length; i++) {
-        let element = elements[i][PLUGIN_KEY$1];
-        if (element) {
-          element.update(view, elements, elements.length);
-        }
-      }
-
-      // Sau khi update xong, xóa hẳn label không hợp lệ
-      elements = elements.filter(e => e && e[PLUGIN_KEY$1]);
-
-
     };
-
-
-
   },
 };
 
