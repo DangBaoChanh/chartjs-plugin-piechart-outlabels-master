@@ -282,19 +282,20 @@ export default {
     };
 
     this.draw = function (ctx) {
-      if (chart.getDataVisibility(index)) {
+      if (chart.getDataVisibility(index) && !this.hidden) {
         this.drawLabel(ctx);
         this.drawText(ctx);
         this.drawLine(ctx);
       }
     };
 
+
     // eslint-disable-next-line max-statements
     this.update = function (view, elements, max) {
       this.center = positioners.center(view, this.stretch);
 
       let valid = false;
-      let steps = 30;
+      let steps = 5; // Tăng số lần thử đẩy label
 
       while (!valid && steps > 0) {
         this.textRect = this.computeTextRect();
@@ -315,11 +316,33 @@ export default {
         }
 
         if (!valid) {
-          this.center = positioners.moveFromAnchor(this.center, 5);
+          // Thay vì chỉ ẩn, đẩy label đi thêm
+          this.offset.x += this.offsetStep;
+          this.center.x += this.offsetStep;
+          steps--;
+          continue;
         }
 
         steps--;
       }
+
+      // Nếu không hợp lệ sau các bước thử, thay vì ẩn thì remove khỏi elements luôn
+      if (!valid) {
+        // Loại bỏ label này khỏi elements để không tính đến nữa
+        // Cách 1: xóa khỏi mảng elements (nếu elements là mảng có thể sửa)
+        // elements.splice(index, 1); // <-- không an toàn nếu đang duyệt elements theo index
+
+        // Cách 2: đánh dấu element này là null hoặc undefined để loại khỏi vòng tính va chạm sau
+        elements[index][PLUGIN_KEY] = null;  // Hoặc undefined
+
+        // Đồng thời set hidden để khỏi vẽ
+        this.hidden = true;
+      } else {
+        this.hidden = false;
+      }
     };
+
+
+
   },
 };

@@ -10,8 +10,7 @@
 <style>
     #myChart {
         min-height: 100px;
-        max-height: 500px;
-
+        max-height: 700px;
     }
 </style>
 
@@ -28,6 +27,7 @@
                 datasets: [
                     {
                         label: 'My Dataset',
+                        // data: [30, 50, 20, 30, 50, ... quá dài, bạn có thể dùng data ngắn hơn để dễ kiểm tra]
                         data: [30, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50],
                         backgroundColor: ['#ff6384', '#36a2eb', '#ffce56'],
                     },
@@ -35,23 +35,20 @@
             },
             options: {
                 layout: {
-                    padding: 0 
+                    padding: 0 // hoặc 50, 60... tùy theo bạn cần nhiều hay ít
                 },
                 plugins: {
                     outlabels: {
                         text: '%l: %p',
                         color: 'black',
-                        stretch: 25,
+                        stretch: 25, // giảm một chút
                         font: {
                             resizable: true,
                             minSize: 0.1,
                             maxSize: 1,
-                        },
-                        backgroundColor: 'transparent', 
-                        borderWidth: 0 
+                        }
                     }
                 }
-
             }
             ,
             plugins: [ChartPieChartOutlabels]
