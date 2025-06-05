@@ -32,7 +32,19 @@ export default {
     text = text.replace(/%l/gi, label);
 
     /* Replace value marker with possible precision value */
-    text = text.replace(/%v\.?\d*/gi, formatToK(value));
+    // text = text.replace(/%v\.?\d*/gi, formatToK(value));
+   
+    (text.match(/%v\.?(\d*)/gi) || [])
+      .map(function (val) {
+        var prec = val.replace(/%v\./gi, "");
+        if (prec.length) {
+          return +prec;
+        }
+        return config.valuePrecision || customDefaults.valuePrecision;
+      })
+      .forEach(function (val) {
+        text = text.replace(/%v\.?(\d*)/i, value.toFixed(val));
+      });
 
 
     /* Replace percent marker with possible precision value */
