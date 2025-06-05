@@ -25,23 +25,15 @@ export default {
 
     // Init text
     var value = context.dataset.data[index];
+
     var label = context.labels[index];
     var text = resolve([config.text, customDefaults.text], context, index);
     /* Replace label marker */
     text = text.replace(/%l/gi, label);
 
     /* Replace value marker with possible precision value */
-    (text.match(/%v\.?(\d*)/gi) || [])
-      .map(function (val) {
-        var prec = val.replace(/%v\./gi, "");
-        if (prec.length) {
-          return +prec;
-        }
-        return config.valuePrecision || customDefaults.valuePrecision;
-      })
-      .forEach(function (val) {
-        text = text.replace(/%v\.?(\d*)/i, value.toFixed(val));
-      });
+    text = text.replace(/%v\.?\d*/gi, formatToK(value));
+
 
     /* Replace percent marker with possible precision value */
     (text.match(/%p\.?(\d*)/gi) || [])
@@ -123,8 +115,31 @@ export default {
         y: 0,
       };
     };
+    function formatToK(value) {
+      if (value < 1000) return value.toString();
+      const k = Math.floor(value / 1000); // lấy phần nghìn
+      const rest = Math.floor((value % 1000) / 10); // lấy phần trăm + chục
+      return `${k}K${rest.toString().padStart(2, "0")}`;
+    }
+    // Format value thành kiểu 2K43
+    const formattedValue = formatToK(value);
 
+    // Chỉ thay %v nếu không có %v.xxx
+    if (!/%v\.?\d*/i.test(text)) {
+      text = text.replace(/%v/gi, formattedValue);
+    }
+
+
+    // Cắt chuỗi nếu quá 15 ký tự
+    if (text.length > 15) {
+      text = text.slice(0, 15) + "...";
+    }
+
+    // Đếm số dòng lại (vì text có thể thay đổi)
+    lines = text.match(/[^\r\n]+/g) || [];
+    lines = lines.map(line => line.trim());
     this.init(text, lines);
+
 
     /* COMPUTING RECTS PART */
     this.computeLabelRect = function () {
@@ -290,8 +305,15 @@ export default {
     };
 
 
+
+
     // eslint-disable-next-line max-statements
     this.update = function (view, elements, max) {
+      if (this.value === 0) {
+        this.hidden = true;
+        return;
+      }
+
       this.center = positioners.center(view, this.stretch);
 
       let valid = false;
