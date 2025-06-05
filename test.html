@@ -1,0 +1,62 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0"></script>
+    <script src="../chartjs-plugin-piechart-outlabels-master/dist/chartjs-plugin-piechart-outlabels.min.js"></script>
+
+</head>
+<style>
+    #myChart {
+        min-height: 100px;
+        max-height: 500px;
+
+    }
+</style>
+
+<body>
+    <h2>Pie Chart with Outlabels</h2>
+    <canvas id="myChart"></canvas>
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow'],
+                datasets: [
+                    {
+                        label: 'My Dataset',
+                        data: [30, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50, 50, 20, 30, 50, 20, 30, 50],
+                        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56'],
+                    },
+                ]
+            },
+            options: {
+                layout: {
+                    padding: 0 
+                },
+                plugins: {
+                    outlabels: {
+                        text: '%l: %p',
+                        color: 'black',
+                        stretch: 25,
+                        font: {
+                            resizable: true,
+                            minSize: 0.1,
+                            maxSize: 1,
+                        },
+                        backgroundColor: 'transparent', 
+                        borderWidth: 0 
+                    }
+                }
+
+            }
+            ,
+            plugins: [ChartPieChartOutlabels]
+        });
+    </script>
+</body>
+
+</html>

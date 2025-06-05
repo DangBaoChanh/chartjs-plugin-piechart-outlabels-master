@@ -1,0 +1,22 @@
+{
+	"root": "./docs",
+	"author": "neckster",
+	"plugins": [
+		"-lunr",
+		"-search",
+		"search-plus",
+		"anchorjs"
+	],
+	"pluginsConfig": {
+		"anchorjs": {
+			"icon": "#",
+			"placement": "left",
+			"visible": "always"
+		},
+		"theme-default": {
+			"showLevel": false,
+			"styles": {
+			}
+		}
+	}
+}
