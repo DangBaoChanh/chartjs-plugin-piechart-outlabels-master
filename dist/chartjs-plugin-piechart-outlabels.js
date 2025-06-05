@@ -600,6 +600,31 @@ var classes = {
         this.textRect = this.computeTextRect();
         this.labelRect = this.computeLabelRect();
 
+        // Nếu label bị đè lên biểu đồ thì ẩn đi
+        const label = this.labelRect;
+        const r = view.outerRadius;
+        const cx = view.x;
+        const cy = view.y;
+
+        const overlapsWithPie = [
+          { x: label.x, y: label.y },
+          { x: label.x + label.width, y: label.y },
+          { x: label.x, y: label.y + label.height },
+          { x: label.x + label.width, y: label.y + label.height },
+        ].some(corner => {
+          const dx = corner.x - cx;
+          const dy = corner.y - cy;
+          return Math.sqrt(dx * dx + dy * dy) < r;
+        });
+
+
+        if (overlapsWithPie) {
+          elements[index][PLUGIN_KEY$1] = null;
+          this.hidden = true;
+          return;
+        }
+
+
         valid = true;
 
         for (var e = 0; e < max; ++e) {
