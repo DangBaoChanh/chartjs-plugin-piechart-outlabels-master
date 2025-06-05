@@ -329,8 +329,8 @@ var classes = {
 
     /* Replace value marker with possible precision value */
     text = text.replace(/%v\.?\d*/gi, formatToK(value));
-   
-  
+
+
 
 
     /* Replace percent marker with possible precision value */
@@ -415,10 +415,10 @@ var classes = {
     };
     function formatToK(value) {
       if (value < 1000) return value.toString();
-      const k = Math.floor(value / 1000); // lấy phần nghìn
-      const rest = Math.floor((value % 1000) / 10); // lấy phần trăm + chục
-      return `${k}K${rest.toString().padStart(2, "0")}`;
+      const formatted = (value / 1000).toFixed(value % 1000 === 0 ? 0 : 2);
+      return `${formatted}K`;
     }
+
     // Format value thành kiểu 2K43
     const formattedValue = formatToK(value);
 
@@ -428,10 +428,23 @@ var classes = {
     }
 
 
-    // Cắt chuỗi nếu quá 15 ký tự
-    if (text.length > 15) {
-      text = text.slice(0, 15) + "...";
+    const dashIndex = text.indexOf('-');
+
+    if (dashIndex !== -1) {
+      const before = text.slice(0, dashIndex + 1);
+      const after = text.slice(dashIndex + 1).trim();
+
+      if (after.length > 15) {
+        text = before + ' ' + after.slice(0, 15) + "...";
+      } else {
+        text = before + ' ' + after;
+      }
+    } else {
+      if (text.length > 15) {
+        text = text.slice(0, 15) + "...";
+      }
     }
+
 
     // Đếm số dòng lại (vì text có thể thay đổi)
     lines = text.match(/[^\r\n]+/g) || [];
