@@ -620,10 +620,10 @@ var classes = {
 
     // eslint-disable-next-line max-statements
     this.update = function (view, elements, max) {
-      if (this.value == 0) {
-        this.hidden = true;
-        return;
-      }
+      // if (this.value === 0) {
+      //   this.hidden = true;
+      //   return;
+      // }
 
       this.center = positioners.center(view, this.stretch);
 
